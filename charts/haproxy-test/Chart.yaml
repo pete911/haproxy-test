@@ -1,0 +1,10 @@
+apiVersion: v2
+home: https://github.com/pete911/haproxy-test
+version: 0.1.0
+name: haproxy-test
+description: Charts to test different haproxy configurations
+sources:
+  - https://github.com/pete911/haproxy-test/charts
+maintainers:
+  - name: peter reisinger
+    email: p.reisinger@gmail.com

@@ -1,0 +1,4 @@
+image: pete911/haproxy-test:dev
+replicas: 3
+haproxyImage: haproxy:2.3
+haproxyNodePort: 30000

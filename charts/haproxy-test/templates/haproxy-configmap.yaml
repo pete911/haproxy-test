@@ -1,0 +1,39 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-haproxy
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+    app.kubernetes.io/component: haproxy-test
+    app.kubernetes.io/managed-by: helm
+data:
+  haproxy.cfg: |
+    global
+      maxconn 50000
+      log stdout local0
+
+    defaults
+      timeout connect 10s
+      timeout client 30s
+      timeout server 30s
+      log global
+      mode http
+      option httplog
+      maxconn 3000
+
+    frontend localnodes
+      bind *:80
+      default_backend nodes
+
+    backend nodes
+      balance roundrobin
+      option httpchk HEAD /
+      default-server check maxconn 20
+      {{- $replicas := .Values.replicas | int }}
+      {{- range $i, $e := until $replicas }}
+      server node{{ $i }} {{ $.Release.Name }}-{{ $i }}.{{ $.Release.Name }}.{{ $.Release.Namespace }}.svc.cluster.local:8080 check
+      {{- end}}
