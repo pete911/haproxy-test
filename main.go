@@ -12,8 +12,9 @@ func main() {
 
 	flags := ParseFlags()
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("[%s] remote address: %s host: %s - %s %s", flags.Name, r.RemoteAddr, r.Host, r.Proto, r.Method)
-		fmt.Fprintf(w, "%d - OK", http.StatusOK)
+		msg := fmt.Sprintf("[%s] remote address: %s host: %s - %s %s", flags.Name, r.RemoteAddr, r.Host, r.Proto, r.Method)
+		log.Print(msg)
+		fmt.Fprintf(w, "%d - OK %s", http.StatusOK, msg)
 	})
 	log.Fatalf("listen and serve: %v", http.ListenAndServe(":8080", nil))
 }
