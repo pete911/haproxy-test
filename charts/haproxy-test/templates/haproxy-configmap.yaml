@@ -2,11 +2,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-haproxy
+  name: haproxy
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ .Chart.Name }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: haproxy
     app.kubernetes.io/version: {{ .Chart.Version }}
     app.kubernetes.io/component: haproxy-test
     app.kubernetes.io/managed-by: helm
@@ -35,5 +34,5 @@ data:
       default-server check maxconn 20
       {{- $replicas := .Values.replicas | int }}
       {{- range $i, $e := until $replicas }}
-      server node{{ $i }} {{ $.Release.Name }}-{{ $i }}.{{ $.Release.Name }}.{{ $.Release.Namespace }}.svc.cluster.local:8080 check
+      server node{{ $i }} node-{{ $i }}.node.{{ $.Release.Namespace }}.svc.cluster.local:8080 check
       {{- end}}
